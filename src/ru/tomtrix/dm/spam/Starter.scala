@@ -7,7 +7,7 @@ import ru.tomtrix.dm.boosting._
  * @author tom-trix
  */
 object Starter {
-    /** Input vector representing an e-mail message*/
+    /** Input vector representing an e-mail message*//*
     case class Email(recipients: Int, hyperlinks: Int, pictures: Int, shortSMS: Int, upperCase: Int, spamWords: Int) extends X {
         val attributes: Seq[Any] = Seq(recipients, hyperlinks, pictures, shortSMS, upperCase, spamWords)
         val f: Seq[Any => Double] = Seq(
@@ -20,7 +20,7 @@ object Starter {
         val vector = attributes zip f map {t => t._2(t._1)}
     }
 
-    /** Entry point */
+    *//** Entry point *//*
     def main(args: Array[String]): Unit =
         {
             //training set
@@ -101,5 +101,5 @@ object Starter {
             println(w(Email(1, 1, 3, 6, 1, 6)))
             println(w(Email(1, 3, 4, 0, 1, 0)))
             println(w(Email(4, 1, 3, 6, 1, 3)))
-        }
+        }*/
 }

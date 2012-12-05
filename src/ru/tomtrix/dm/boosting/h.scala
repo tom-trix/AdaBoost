@@ -13,7 +13,20 @@ trait h {
      * @param t - input vector
      * @return classification result (+1 or -1)
      */
-    final def apply(t: X) = if (t.vector(k) > Θ) 1 else -1
+    def apply(t: X) = if (t.items(k) > Θ) 1 else -1
+}
+
+trait multiStump extends h {
+    val components: Set[Int]
+    val tresholds: Seq[Double]
+    val existsOrForall: Boolean
+    override def apply(t: X) = {
+        val lst = for {
+            c <- components toList
+        } yield t.items(c)
+        if (existsOrForall) { if (lst zip tresholds.toList exists (p => p._1 > p._2)) 1 else -1 }
+        else { if (lst zip tresholds.toList forall (p => p._1 > p._2)) 1 else -1 }
+    }
 }
 
 /**
@@ -37,7 +50,7 @@ object h {
      * @return ε-error (= summa of such D(i) where y(i) != h(x(i)))
      */
     private def ε(w: h, trainingSet: Map[X, Int], D: Seq[Double]) =
-        trainingSet.zip(D).map {p => if (p._1._2 != w(p._1._1)) p._2 else 0}.toList sum;
+        trainingSet.zip(D).map { p => if (p._1._2 != w(p._1._1)) p._2 else 0 }.toList sum;
 
     /**
      * @param trainingSet - training set to learn
