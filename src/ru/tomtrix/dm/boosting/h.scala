@@ -16,18 +16,26 @@ trait h {
     def apply(t: X) = if (t.items(k) > Θ) 1 else -1
 }
 
+/**
+ * Weak classificator that uses modifyed stump-function: IF one(or all) of components > Θ => 1 ELSE -1
+ * @author tom-trix
+ */
 trait multiStump extends h {
     override val k = 0;
     override val Θ = 0d;
+    /** Which components of vector to check */
     val components: Set[Int]
+    /** List of corresponding tresholds */
     val tresholds: Seq[Double]
+    /** Function to be applied (exists or forall) */
     val existsOrForall: Boolean
     override def apply(t: X) = {
         val lst = for {
             c <- components toList
         } yield t.items(c)
-        if (existsOrForall) { if (lst zip tresholds.toList exists (p => p._1 > p._2)) 1 else -1 }
-        else { if (lst zip tresholds.toList forall (p => p._1 > p._2)) 1 else -1 }
+        val w = lst zip tresholds.toList
+        if (existsOrForall) { if (w exists (p => p._1 > p._2)) 1 else -1 }
+        else { if (w forall (p => p._1 > p._2)) 1 else -1 }
     }
 }
 
