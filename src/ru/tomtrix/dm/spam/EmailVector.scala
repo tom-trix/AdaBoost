@@ -1,6 +1,3 @@
-/**
- *
- */
 package ru.tomtrix.dm.spam
 
 import java.util.regex._
@@ -13,7 +10,7 @@ import ru.tomtrix.dm.boosting._
 
 case class EmailVector(val items: Seq[Double]) extends X
 
-object WeakClassificator {
+object EmailVector {
     val sr = "[\\. \n\r\t)(;,:\"–—?!\\-«»]"
     val nosr = "[^" + sr.substring(1)
 

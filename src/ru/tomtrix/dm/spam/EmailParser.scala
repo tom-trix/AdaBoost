@@ -1,6 +1,7 @@
 package ru.tomtrix.dm.spam
+
 import java.util.regex._
-import ru.tomtrix.dm.spam.Analyzer._
+import ru.tomtrix.dm.spam._
 
 /**
  * @author tom-trix
@@ -20,7 +21,7 @@ object EmailParser {
 
     def parse(email: String) =
         {
-            val sr = splitRegex
+            val sr = Analyzer.splitRegex
             val nosr = "[^" + sr.substring(1)
             println("words = " + getCount(email, nosr + "+"));
             println("hyperlinks = " + getCount(email, "\\.ru|\\.com|\\.net|\\.org|\\.ua|\\.de"));

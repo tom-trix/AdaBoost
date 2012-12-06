@@ -17,6 +17,8 @@ trait h {
 }
 
 trait multiStump extends h {
+    override val k = 0;
+    override val Θ = 0d;
     val components: Set[Int]
     val tresholds: Seq[Double]
     val existsOrForall: Boolean
