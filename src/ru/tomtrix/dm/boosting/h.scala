@@ -17,7 +17,7 @@ trait h {
 }
 
 /**
- * Weak classificator that uses modifyed stump-function: IF one(or all) of components > Θ => 1 ELSE -1
+ * Weak classificator that uses modifyed stump-function: IF "n" components > Θ => 1 ELSE -1
  * @author tom-trix
  */
 trait multiStump extends h {
@@ -28,14 +28,12 @@ trait multiStump extends h {
     /** List of corresponding tresholds */
     val tresholds: Seq[Double]
     /** Function to be applied (exists or forall) */
-    val existsOrForall: Boolean
+    val m: Int
     override def apply(t: X) = {
         val lst = for {
             c <- components toList
         } yield t.items(c)
-        val w = lst zip tresholds.toList
-        if (existsOrForall) { if (w exists (p => p._1 > p._2)) 1 else -1 }
-        else { if (w forall (p => p._1 > p._2)) 1 else -1 }
+        if (lst.zip(tresholds).toList.filter(p => p._1 > p._2).size >= m) 1 else -1
     }
 }
 
@@ -69,7 +67,6 @@ object h {
      */
     def find(trainingSet: Map[X, Int], D: Seq[Double]) = {
         val min_h = h.allClassificators.minBy(t => ε(t, trainingSet, D))
-        if (ε(min_h, trainingSet, D) < 0.5) println("ε = " + ε(min_h, trainingSet, D))
         (min_h, ε(min_h, trainingSet, D))
     }
 }

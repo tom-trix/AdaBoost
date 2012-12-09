@@ -10,10 +10,10 @@ import scala.Math._
  */
 class H(trainingSet: Map[X, Int]) {
     //weights (initially = 1/n)
-    private var D = trainingSet.toList map (t => 1.0 / trainingSet.size)
+    private var D = trainingSet.toList map {t => 1.0 / trainingSet.size}
     //calculate a sequence of ("α"; "h(x)") pairs
     private val result = for {
-        i <- 1 to 32 map (t => {
+        i <- 1 to 16 map (t => {
             //find the best weak classificator and its an ε-error
             val (ht, εt) = h find (trainingSet, D)
             if (εt < 0.5) {
@@ -24,6 +24,8 @@ class H(trainingSet: Map[X, Int]) {
                 //normalize them
                 val n = D.sum
                 D = D map {_ / n}
+                //print
+                println("%d): %52s; ε=%.18f; α=%.18f" format (t, ht, εt, αt))
                 Some(αt, ht)
             } else None
         })
@@ -33,5 +35,9 @@ class H(trainingSet: Map[X, Int]) {
      * @param x - input vector
      * @return classification result (+1 or -1)
      */
-    def apply(x: X) = signum (result.flatten map { t => t._1 * t._2(x) } sum)
+    def apply(x: X) = {
+        val s = result.flatten.map { t => t._1 * t._2(x) }.sum
+        println ("summa = " + s)
+        signum (s)
+    }
 }
