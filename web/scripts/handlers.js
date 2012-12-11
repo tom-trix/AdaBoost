@@ -22,8 +22,9 @@ exports.landingPage = function(response, data) {
 exports.resultPage = function(response, data) {
     var msg = '"' + querystring.parse(data).text + '"';
     child.exec("java -jar ./adaboost/adaBoostClient.jar " + msg, function(input, output, error) {
+        var p = Math.min(1, Math.max(0, output / 2 + 0.5));
         response.writeHead(200, {"Content-Type": "text/plain"});
-        response.write(output);
+        response.write("Оценка = " + p + " %");
         response.end();
     });
 }
