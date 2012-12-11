@@ -38,8 +38,8 @@ object Starter {
         var channel = new JChannel("UDP(bind_addr=127.0.0.1)")
         channel setReceiver(new ReceiverAdapter {
             override def receive(m: Message) = if (channel.getAddress != m.getSrc) {
-                println("  >> received message: " + m.getObject)
-                val d = Strong(getVector(m.getObject toString))
+                println("  >> received message: " + m.getObject.toString)
+                val d = Strong(getVector(m.getObject.toString))
                 channel send(new Message(null, null, d))
             }
         })

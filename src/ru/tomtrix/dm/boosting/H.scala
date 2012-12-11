@@ -25,7 +25,7 @@ class H(trainingSet: Map[X, Int]) {
                 val n = D.sum
                 D = D map {_ / n}
                 //print
-                println("%d): %52s; ε=%.18f; α=%.18f" format (t, ht, εt, αt))
+                println("%2d): %52s; ε=%.18f; α=%.18f" format (t, ht, εt, αt))
                 Some(αt, ht)
             } else None
         })
@@ -38,6 +38,6 @@ class H(trainingSet: Map[X, Int]) {
     def apply(x: X) = {
         val s = result.flatten.map { t => t._1 * t._2(x) }.sum
         println ("summa = " + s)
-        signum (s)
+        s
     }
 }

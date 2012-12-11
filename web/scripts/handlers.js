@@ -21,11 +21,26 @@ exports.landingPage = function(response, data) {
 
 exports.resultPage = function(response, data) {
     var msg = '"' + querystring.parse(data).text + '"';
-    child.exec("java -jar x.jar " + msg, function(input, output, error) {
-        if (!error) {
-            response.writeHead(200, {"Content-Type": "text/plain"});
-            response.write(output);
-            response.end();
-        }
+    child.exec("java -jar ./adaboost/adaBoostClient.jar " + msg, function(input, output, error) {
+        response.writeHead(200, {"Content-Type": "text/plain"});
+        response.write(output);
+        response.end();
+    });
+}
+
+exports.serverStatistics = function(response, data) {
+    fs.readFile('./html/statistics.html', function (err1, filedata) {
+        fs.readFile('./adaboost/1.txt', function (err2, output) {
+            if (!err1 && !err2) {
+                var i = 0;
+                while (i++ < 300) {
+                    output = output.toString().replace("\n", "<br>");
+                    output = output.toString().replace(" ", "&nbsp");
+                }
+                response.writeHead(200, {"Content-Type": "text/html"});
+                response.write(filedata.toString().replace("###", output));
+                response.end();
+            }
+        });
     });
 }
