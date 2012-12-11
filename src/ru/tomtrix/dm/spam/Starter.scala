@@ -3,9 +3,12 @@ package ru.tomtrix.dm.spam
 import scala.io.Source
 import ru.tomtrix.dm.boosting._
 import ru.tomtrix.dm.spam.EmailVector._
+import org.jgroups.JChannel
+import org.jgroups.ReceiverAdapter
+import org.jgroups.Message
 
-/**
- * Entry point
+/** @author tom-trix
+ * This is AdaBoost Server (that uses JGroups to interconnect)
  */
 object Starter {
     // add 1000 weak classificators
@@ -24,12 +27,25 @@ object Starter {
     val trainingSet: Map[X, Int] = (spam map { t => getVector(t) -> 1 } toMap) ++ (noSpam map { t => getVector(t) -> -1 } toMap)
     println("training set contains " + trainingSet.size + " samples")
     // AdaBoost!!!
-    val adaBoost = new H(trainingSet)
+    val Strong = new H(trainingSet)
 
+    /**
+     * Entry point
+     * @param args
+     */
     def main(args: Array[String]) = {
-        /*println("input message:")
-        while (true)
-            println(adaBoost(getVector(readLine)));*/
-        println(adaBoost(getVector(args(0))));
+        System.setProperty("java.net.preferIPv4Stack", "true")
+        var channel = new JChannel("UDP(bind_addr=127.0.0.1)")
+        channel setReceiver(new ReceiverAdapter {
+            override def receive(m: Message) = if (channel.getAddress != m.getSrc) {
+                println("  >> received message: " + m.getObject)
+                val d = Strong(getVector(m.getObject toString))
+                channel send(new Message(null, null, d))
+            }
+        })
+        channel connect("AdaBoost")
+        println("Press Enter to quit the AdaBoost server...")
+        readLine
+        channel close
     }
 }
