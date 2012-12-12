@@ -1,10 +1,3 @@
-/**
- * Created by JetBrains WebStorm.
- * User: tom-trix
- * Date: 12/10/12
- * Time: 11:53 PM
- * To change this template use File | Settings | File Templates.
- */
 var http = require("http");
 var url = require("url");
 
