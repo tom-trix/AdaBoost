@@ -26,8 +26,24 @@ object Starter {
     // obtain a training set
     val trainingSet: Map[X, Int] = (spam map { t => getVector(t) -> 1 } toMap) ++ (noSpam map { t => getVector(t) -> -1 } toMap)
     println("training set contains " + trainingSet.size + " samples")
+    
     // AdaBoost!!!
     val Strong = new H(trainingSet)
+    
+    def getQuality = {
+        val spamResult = spam.map { t => Strong(getVector(t)) } toList
+        val noSpamResult = noSpam.map { t => Strong(getVector(t)) } toList
+
+        val goodSpam = 100.0 * spamResult.filter { _ > 0 }.size / spamResult.size
+        val excellentSpam = 100.0 * spamResult.filter { _ > 0.5 }.size / spamResult.size
+        val badSpam = 100.0 * spamResult.filter { _ <= 0 }.size / spamResult.size
+
+        val goodNospam = 100.0 * noSpamResult.filter { _ < 0 }.size / noSpamResult.size
+        val excellentNospam = 100.0 * noSpamResult.filter { _ < 0.5 }.size / noSpamResult.size
+        val badNospam = 100.0 * noSpamResult.filter { _ >= 0 }.size / noSpamResult.size
+
+        "  Spam analysis: good - %4.1f%% (excellent - %4.1f%%),  I-type error - %4.1f%%\nNoSpam analysis: good - %4.1f%% (excellent - %4.1f%%), II-type error - %4.1f%%" format (goodSpam, excellentSpam, badSpam, goodNospam, excellentNospam, badNospam)
+    }
 
     /**
      * Entry point
@@ -38,8 +54,9 @@ object Starter {
         var channel = new JChannel("UDP(bind_addr=127.0.0.1)")
         channel setReceiver(new ReceiverAdapter {
             override def receive(m: Message) = if (channel.getAddress != m.getSrc) {
-                println("  >> received message: " + m.getObject.toString)
-                val d = Strong(getVector(m.getObject.toString))
+                var s = m.getObject.toString
+                println("  >> received message: " + s)
+                val d = if (s.toLowerCase == "getquality") getQuality else Strong(getVector(s))
                 channel send(new Message(null, null, d))
             }
         })

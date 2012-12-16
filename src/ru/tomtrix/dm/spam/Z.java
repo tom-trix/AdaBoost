@@ -4,6 +4,6 @@ public class Z
 {
 	public static void main(String[] args)
 	{
-		System.out.println("Fuck me, baby!");
+		System.out.println(String.format("Fuck me, baby, %d%%!", 50));
 	}
 }
