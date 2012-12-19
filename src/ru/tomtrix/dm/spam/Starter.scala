@@ -39,7 +39,7 @@ object Starter {
         val badSpam = 100.0 * spamResult.filter { _ <= 0 }.size / spamResult.size
 
         val goodNospam = 100.0 * noSpamResult.filter { _ < 0 }.size / noSpamResult.size
-        val excellentNospam = 100.0 * noSpamResult.filter { _ < 0.5 }.size / noSpamResult.size
+        val excellentNospam = 100.0 * noSpamResult.filter { _ < -0.5 }.size / noSpamResult.size
         val badNospam = 100.0 * noSpamResult.filter { _ >= 0 }.size / noSpamResult.size
 
         "  Spam analysis: good - %4.1f%% (excellent - %4.1f%%),  I-type error - %4.1f%%\nNoSpam analysis: good - %4.1f%% (excellent - %4.1f%%), II-type error - %4.1f%%" format (goodSpam, excellentSpam, badSpam, goodNospam, excellentNospam, badNospam)
